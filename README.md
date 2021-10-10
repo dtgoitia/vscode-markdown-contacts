@@ -70,16 +70,24 @@ Reload VSCode when you change the list of names in the extension settings.
 
 ## Release Notes
 
-...
+### 0.0.6
 
-### 0.0.4
+* Manually update release notes
 
+### 0.0.5
+
+* Update instructions to manually publish extension
+* Expose `vsce` via NPM scripts
 * Document how to get latest extension settings
 * Add instructions to manually publish package
 * Add NPM script to manually publish package
 * Document previous releases
 * Document how to debug the extension in VSCode
 * Update dependencies
+
+### 0.0.4
+
+* (skipped due to publishing mistakes)
 
 ### 0.0.3
 
