@@ -3,9 +3,12 @@
   "displayName": "markdown-contacts",
   "description": "",
   "publisher": "dtgoitia",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "license": "MIT",
-  "keywords": ["markdown", "contacts"],
+  "keywords": [
+    "markdown",
+    "contacts"
+  ],
   "engines": {
     "vscode": "^1.56.0"
   },
