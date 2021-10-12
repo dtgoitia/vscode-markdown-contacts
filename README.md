@@ -18,8 +18,8 @@
   1. Manually bump version:
 
       ```bash
-      npm version patch # major/minor/patch/...
-                        # see `npm version --help` for more options
+      npm version patch  # major/minor/patch/...
+                         # see `npm version --help` for more options
       ```
     
       Check [published versions](https://marketplace.visualstudio.com/items?itemName=dtgoitia.markdown-contacts) if you are unsure about whether you need to bump the version or not.
