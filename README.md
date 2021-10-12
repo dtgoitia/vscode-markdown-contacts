@@ -2,18 +2,34 @@
 
 * Install project dependencies:
 
-  ```shell
+  ```bash
   npm install  # do not use `npm ci`
   ```
 
-* To debug the extension in VSCode:
+* Debug the extension in VSCode:
 
   1. Run TypeScript compiler: `npm run watch`.
   1. Open `src/extension.ts` in your editor.
   1. Press `F5`.
   1. Once the new VSCode instance is launched, select the Markdown language.
 
-* To manually publish the extension:
+* Publish extension:
+
+  1. Manually bump version:
+
+      ```bash
+      npm version patch # major/minor/patch/...
+                        # see `npm version --help` for more options
+      ```
+    
+      Check [published versions](https://marketplace.visualstudio.com/items?itemName=dtgoitia.markdown-contacts) if you are unsure about whether you need to bump the version or not.
+  
+  1. Push latest changes: `git push`
+
+  1. Go to [CI](https://app.circleci.com/pipelines/github/dtgoitia/vscode-markdown-contacts) and **manually approve** to publish.
+
+* (**AVOID WHEN POSSIBLE**, use CI instead)
+  Manually publish the extension:
 
   1. Set up credentials as environment variables:
 
@@ -22,13 +38,12 @@
 
   1. Publish the extension bumping the version:
 
-      ```shell
-      npm run publish minor  # major/minor/patch, see `npm version --help` for more options
+      ```bash
+      npm run publish minor  # major/minor/patch/...
+                             # see `npm version --help` for more options
       ```
 
   This will bundle the extension with `webpack` (same as `npm run vscode:prepublish`) and upload it to the extension marketplace.
-
-  NOTE: version will not be automatically bumped at `package.json`.
 
 ## Features
 
@@ -69,6 +84,10 @@ Reload VSCode when you change the list of names in the extension settings.
 ...
 
 ## Release Notes
+
+### 0.0.7
+
+* Update docs: document how to publish via CI
 
 ### 0.0.6
 
