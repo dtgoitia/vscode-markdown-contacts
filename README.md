@@ -85,6 +85,16 @@ Reload VSCode when you change the list of names in the extension settings.
 
 ## Release Notes
 
+### 0.1.1
+
+* feat: reload extension on configuration change
+
+### 0.1.0
+
+* feat: suggest names in open document
+* devex: pin used Node version
+* docs: fix minor formatting issue
+
 ### 0.0.7
 
 * Update docs: document how to publish via CI
