@@ -1,21 +1,18 @@
 import * as vscode from 'vscode';
 import { DocumentSelector } from 'vscode';
 import { ContactCompletionProvider } from './completions';
+import { Configuration } from './domain/config';
 import { initialize } from './domain/initialize';
 import { Contact } from './domain/model';
 import { updateContactsAsPerTextDocument } from './findContacts';
 import log from './logs';
 
 
-class Configuration {
-	constructor(readonly names: Contact[]) { }
-}
-
-function getConfiguration(): Configuration {
+function readGlobalAndWorkspaceConfiguration(): Configuration {
 	const config = vscode.workspace.getConfiguration('markdown-contacts');
 	const globalNames = config.get<Contact[]>('globalNames', []);
 	const workspaceNames = config.get<Contact[]>('workspaceNames', []);
-	const names = [...globalNames, ...workspaceNames];
+	const names = new Set<Contact>([...globalNames, ...workspaceNames]);
 	const configuration = new Configuration(names)
 	return configuration;
 }
@@ -27,16 +24,13 @@ export function activate(context: vscode.ExtensionContext) {
 		const language: DocumentSelector = { language: 'markdown' };
 		const triggerCharacters = ['@'];
 
-		// TODO: config should be read inside initialization logic <<<<<<<<<<<<<<<<<< TODO
-		log.debug('Workspace config load started')
-		const config = getConfiguration();
-		const contactsInConfig = config.names;
-		log.debug('Workspace config load completed')
+		log.debug('Global and workspace config load started')
+		const config = readGlobalAndWorkspaceConfiguration();
+		log.debug('Global and workspace config load completed')
 
 		// Domain
 		log.debug('Domain initialization started')
-		const { contactManager } = initialize();
-		contactManager.batchAdd(contactsInConfig);
+		const { contactManager } = initialize({ config });
 		const provider = new ContactCompletionProvider({ contactManager });
 		log.debug('Domain initialization completed')
 

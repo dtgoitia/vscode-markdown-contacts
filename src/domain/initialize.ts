@@ -1,12 +1,18 @@
+import { Configuration } from "./config";
 import { ContactManager } from "./contacts";
+
+interface Args {
+  config: Configuration;
+}
 
 interface App {
   contactManager: ContactManager;
 }
 
-export function initialize(): App {
-  // TODO move load contacts from global and workspace configs in here
+export function initialize({ config }: Args): App {
   const contactManager = new ContactManager();
+
+  contactManager.batchAdd(config.contacts)
 
   return { contactManager };
 }
