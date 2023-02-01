@@ -52,7 +52,6 @@
     "pretest": "npm run test-compile && npm run lint",
     "lint": "eslint src --ext ts",
     "test": "node ./out/test/runTest.js",
-    "vsce": "vsce",
     "publish": "vsce publish"
   },
   "devDependencies": {
@@ -71,5 +70,8 @@
     "vscode-test": "^1.5.2",
     "webpack": "^5.38.1",
     "webpack-cli": "^4.7.0"
+  },
+  "dependencies": {
+    "rxjs": "^7.8.0"
   }
 }
