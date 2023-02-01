@@ -4,48 +4,83 @@ import { Contact } from "./model";
 import { SortAction } from "./sort";
 
 export class ContactManager {
+  /**
+   * Contacts from config and from document should be separated to that config contacts
+   * can be removed when the config is updated - and therefore might be necessary to
+   * remove items.
+   */
   public changes$: Observable<ContactChanges>;
 
-  private contacts: Set<Contact>;
+  private contactsInConfig: Set<Contact>;
+  private contactsInDocument: Set<Contact>;
   private changesSubject: Subject<ContactChanges>;
 
   constructor() {
     this.changesSubject = new Subject<ContactChanges>();
     this.changes$ = this.changesSubject.asObservable();
 
-    this.contacts = new Set<Contact>();
+    this.contactsInConfig = new Set<Contact>();
+    this.contactsInDocument = new Set<Contact>();
   }
 
-  public add(contact: Contact): void {
-    this.contacts.add(contact);
+  public addConfigContacts(contacts: Iterable<Contact>): void {
+    const addedContacts = new Set<Contact>();
+    for (const contact of contacts) {
+      this.contactsInConfig.add(contact);
+      addedContacts.add(contact);
+    }
 
-    this.changesSubject.next(new ContactAdded(contact));
+    this.changesSubject.next(new ConfigContactsAdded(addedContacts));
+  }
+
+  public deleteAllConfigContacts(): void {
+    this.contactsInConfig = new Set<Contact>();
+    this.changesSubject.next(new AllConfigContactsDeleted());
   }
 
   public batchAdd(contacts: Iterable<Contact>): void {
     const addedContacts = new Set<Contact>();
     for (const contact of contacts) {
-      this.contacts.add(contact);
+      this.contactsInConfig.add(contact);
       addedContacts.add(contact);
     }
 
-    this.changesSubject.next(new ContactBatchAdded(addedContacts));
+    this.changesSubject.next(new DocumentContactsAdded(addedContacts));
   }
 
   public getAll(): Contact[] {
-    return [...this.contacts.values()].sort(sortContactsAlphabetically);
+    const allDeduplicatedContacts: Contact[] = [];
+
+    for (const contactInConfig of this.contactsInConfig) {
+      allDeduplicatedContacts.push(contactInConfig);
+    }
+
+    for (const contactInDocument of this.contactsInDocument) {
+      if (this.contactsInConfig.has(contactInDocument)) {
+        continue;
+      }
+      allDeduplicatedContacts.push(contactInDocument);
+    }
+
+    return allDeduplicatedContacts.sort(sortContactsAlphabetically);
   }
 }
 
-class ContactAdded {
-  constructor(public readonly contact: Contact) { }
-}
-
-class ContactBatchAdded {
+class ConfigContactsAdded {
   constructor(public readonly contacts: Set<Contact>) { }
 }
 
-type ContactChanges = ContactAdded | ContactBatchAdded;
+class DocumentContactsAdded {
+  constructor(public readonly contacts: Set<Contact>) { }
+}
+
+class AllConfigContactsDeleted { }
+class AllDocumentContactsDeleted { }
+
+type ContactChanges = ConfigContactsAdded
+  | DocumentContactsAdded
+  | AllConfigContactsDeleted
+  | AllDocumentContactsDeleted;
 
 function sortContactsAlphabetically(a: Contact, b: Contact): SortAction {
   const name_a = a.toLowerCase();

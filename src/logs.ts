@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import * as util from 'util';
 import * as vscode from 'vscode';
 import { todo } from './devex/errors';
+import { CONFIGURATION_SECTION_NAME } from './domain/config';
 import { Path } from './io';
 import path = require('path');
 
@@ -126,7 +127,7 @@ enum LogLevel {
 }
 
 const testLogger = new TestLogger({ logPath: new Path("test.log") });
-const vscodeLogger = new VSCodeLogger({ channelName: "markdown-contacts" })
+const vscodeLogger = new VSCodeLogger({ channelName: CONFIGURATION_SECTION_NAME });
 
 function isCodeExecutedInJestTest(): boolean {
   return process.env.JEST_WORKER_ID !== undefined;
