@@ -49,6 +49,7 @@
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
     "test": "node ./out/test/runTest.js",
+    "publish:test-credentials": "vsce verify-pat",
     "publish": "vsce publish"
   },
   "devDependencies": {
