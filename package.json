@@ -29,6 +29,12 @@
     "configuration": {
       "title": "Markdown contacts",
       "properties": {
+        "markdown-contacts.symbol": {
+          "type": "string",
+          "default": "@",
+          "enum": ["@", "#"],
+          "description": "Single-character prefix that precedes contact names"
+        },
         "markdown-contacts.globalNames": {
           "type": "array",
           "default": [],

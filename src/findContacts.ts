@@ -1,22 +1,20 @@
 import * as vscode from 'vscode';
 import { Profiler } from './devex/profiler';
+import { Configuration } from './domain/config';
 import { ContactManager } from './domain/contacts';
-import { Contact } from './domain/model';
+import { Contact, ContactSymbol } from './domain/model';
 import log from './logs';
 
-const CONTACT_PATTERN = /(^|\s)(@[A-Z][a-zA-Z]*)/g;
-// [...`@HeyYoo, this is a text with @Foo and
-// @Bar which are great, but this one: Bad@Contact is not`.matchAll(/(^|\s)(@[A-Z][a-zA-Z]*)/g)]
-//   .map(x => console.log(x[2]))
 
-export function updateContactsAsPerTextDocument({ document, contactManager }: { document: vscode.TextDocument, contactManager: ContactManager }): void {
+export function updateContactsAsPerTextDocument({ document, contactManager, config }: { document: vscode.TextDocument, contactManager: ContactManager, config: Configuration }): void {
   if (document.isClosed) {
+    log.debug(`Won't scan anything, the document is closed`)
     return;
   }
 
   const profiler = new Profiler();
   profiler.start();
-  const contacts = findContactsInText(document.getText());
+  const contacts = findContactsInText(document.getText(), config.symbol);
   profiler.end();
   log.debug(`Document contacts scanned in`, profiler.delta(), `ms`);
 
@@ -24,18 +22,25 @@ export function updateContactsAsPerTextDocument({ document, contactManager }: { 
   contactManager.batchAdd(contacts);
 }
 
-function findContactsInText(text: string): Set<Contact> {
+function buildRegexPattern(symbol: ContactSymbol): RegExp {
+  const pattern = `${symbol}[A-Z][a-zA-Z]*`;
+  return new RegExp(pattern, "g");
+}
+
+function findContactsInText(text: string, symbol: ContactSymbol): Set<Contact> {
   // Brute force approach where you scan the whole document
   // Potential optimization: look for the edited chunks instead
-  const matchedIterator = text.matchAll(CONTACT_PATTERN);
-  log.debug(text)
+  const pattern = buildRegexPattern(symbol);
+  const matchedIterator = text.matchAll(pattern);
 
   const rawContacts = new Set<Contact>();
   for (const match of matchedIterator) {
-    const rawContact = match[2];  // retrieve group 2 from this match
+    const rawContact = match[0];
     const contact = cleanContact(rawContact);
     rawContacts.add(contact);
   }
+
+  log.debug(rawContacts)
 
   return rawContacts;
 }
@@ -45,6 +50,6 @@ function cleanContact(raw: string): Contact {
    * Assumptions: `raw` will always look like this: "@FooBar"
    */
 
-  // drop leading "@"
+  // drop leading contact symbol
   return raw.slice(1);
 }
