@@ -88,6 +88,11 @@ Reload VSCode when you change the list of names in the extension settings.
 
 ## Release Notes
 
+### 1.1.0
+
+* 24cd132 feat: support a custom contact symbol
+* df4dde0 devex(ci): always attempt to publish master in CI
+
 ### 1.0.1
 
 * a678c80 devex(pre-push): ignore release doc updates commits and tags
