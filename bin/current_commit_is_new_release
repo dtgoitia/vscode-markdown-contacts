@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+# This script should run before pushing to origin/master
+
+set -eu
+
+log () {
+    echo >&2 "${1}"
+}
+
+debug () {
+    echo >&2 "DEBUG: ${1}"
+}
+
+get_nth_tag () {
+    # 0=last, 1=second last, etc.
+    position="${1}"
+
+    tag="$( \
+        git tag --list --sort="refname" \
+        | tail -n "$(( "${position}" + 1 ))" \
+        | head -n 1 \
+    )"
+
+    echo "${tag}"
+}
+
+#
+# Find last and second last versions
+#
+last_tag="$( get_nth_tag 0 )"
+if [[ -z "${last_tag}" ]]; then
+    log "ERROR: could not find any tags"
+    exit 1
+fi
+
+
+last_tag_commit="$( git rev-list --max-count=1 "${last_tag}" )"
+current_commit="$( git rev-list --max-count=1 HEAD )"
+
+if [[ "$last_tag_commit" == "$current_commit" ]]; then
+    echo "yes"
+else
+    echo "no"
+fi
