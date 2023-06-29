@@ -15,6 +15,8 @@
 
 * Publish extension:
 
+  1. Add last changes to README - ignore commits with version changes and updates to README.md to add release changes.
+
   1. Manually bump version:
 
       ```bash
@@ -24,7 +26,7 @@
     
       Check [published versions](https://marketplace.visualstudio.com/items?itemName=dtgoitia.markdown-contacts) if you are unsure about whether you need to bump the version or not.
   
-  1. Push latest changes: `git push --atomic master `
+  1. Push latest changes: `git push --atomic origin master`  (to ensure tags are sent simultaneously)
 
   1. Go to [CI](https://github.com/dtgoitia/vscode-markdown-contacts/actions/) to monitor deployment.
     Note: the deployment will fail if there is not a new tag.
