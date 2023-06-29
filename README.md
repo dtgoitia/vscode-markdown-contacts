@@ -24,7 +24,7 @@
     
       Check [published versions](https://marketplace.visualstudio.com/items?itemName=dtgoitia.markdown-contacts) if you are unsure about whether you need to bump the version or not.
   
-  1. Push latest changes: `git push`
+  1. Push latest changes: `git push --atomic master `
 
   1. Go to [CI](https://github.com/dtgoitia/vscode-markdown-contacts/actions/) to monitor deployment.
     Note: the deployment will fail if there is not a new tag.
@@ -85,6 +85,9 @@ Reload VSCode when you change the list of names in the extension settings.
 ...
 
 ## Release Notes
+
+### 1.0.1
+
 
 ### 1.0.0
 

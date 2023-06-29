@@ -25,6 +25,12 @@ get_nth_tag () {
     echo "${tag}"
 }
 
+
+#
+# Sync with remote
+#
+git fetch --all --tags
+
 #
 # Find last and second last versions
 #
