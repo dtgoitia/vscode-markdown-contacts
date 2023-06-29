@@ -85,6 +85,10 @@ Reload VSCode when you change the list of names in the extension settings.
 
 ## Release Notes
 
+### 1.0.0
+
+* deps: upgrade to latest VSCode extension recommended packages
+
 ### 0.1.1
 
 * feat: reload extension on configuration change
