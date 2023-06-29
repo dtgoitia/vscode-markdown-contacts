@@ -26,7 +26,8 @@
   
   1. Push latest changes: `git push`
 
-  1. Go to [CI](https://app.circleci.com/pipelines/github/dtgoitia/vscode-markdown-contacts) and **manually approve** to publish.
+  1. Go to [CI](https://github.com/dtgoitia/vscode-markdown-contacts/actions/) to monitor deployment.
+    Note: the deployment will fail if there is not a new tag.
 
 * (**AVOID WHEN POSSIBLE**, use CI instead)
   Manually publish the extension:

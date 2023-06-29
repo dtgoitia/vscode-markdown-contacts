@@ -1,0 +1,83 @@
+name: publish
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+
+  check-if-new-version-is-available:
+    name: check if new version is available
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: .
+    outputs:
+      should_publish: ${{ steps.inspect.outputs.should_publish }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # entire git history needed to get tags
+
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "20.3.1"
+
+      - name: Check if there is a new version available
+        id: inspect
+        run: |
+          should_publish="$( bin/should_publish )"
+          echo "should_publish=${should_publish}" >> $GITHUB_OUTPUT
+
+  publish-to-vscode-market:
+    name: publish to vscode market
+    needs: check-if-new-version-is-available
+    if: needs.check-if-new-version-is-available.outputs.should_publish == 'yes'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: .
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "20.3.1"
+
+      - name: Cache npm modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          # npm cache files are stored in `~/.npm` on Linux/macOS
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - name: Fail if it should not publish
+        run: bin/fail_if_should_not_publish
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Test VSCode Marketplace credentials
+        run: npm run publish:test-credentials
+        env:
+          VSCODE_PUBLISHER_ID: ${{ secrets.VSCODE_PUBLISHER_ID }}
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+
+      - name: Publish to VSCode Marketplace
+        run: npm run publish
+        env:
+          VSCODE_PUBLISHER_ID: ${{ secrets.VSCODE_PUBLISHER_ID }}
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}

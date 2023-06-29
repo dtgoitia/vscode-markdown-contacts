@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+set -eu
+
+log () {
+    echo >&2 "${1}"
+}
+
+last_tag="$( git tag --list --sort="refname" | tail -n 1 )"
+if [[ -z "${last_tag}" ]]; then
+    log "ERROR: could not find any tags"
+    exit 1
+fi
+
+last_tag_commit="$( git rev-list -n 1 "${last_tag}" )"
+current_commit="$( git rev-parse HEAD )"
+
+if [[ "${last_tag_commit}" == "${current_commit}" ]]; then
+    log "Last tag (${last_tag}) pointings to HEAD"
+    log "$( printf '%+9s' "${last_tag}" ): ${last_tag_commit}"
+    log "$( printf '%+9s' "HEAD"        ): ${current_commit}"
+    log ""
+    log "Should deploy"
+    echo "yes"
+else
+    log "Last tag (${last_tag}) is not pointing to HEAD"
+    log "$( printf '%+9s' "${last_tag}" ): ${last_tag_commit}"
+    log "$( printf '%+9s' "HEAD"        ): ${current_commit}"
+    log ""
+    log "Should not deploy"
+    echo "no"
+fi
