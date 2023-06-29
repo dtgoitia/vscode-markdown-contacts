@@ -90,6 +90,15 @@ Reload VSCode when you change the list of names in the extension settings.
 
 ### 1.0.1
 
+* a678c80 devex(pre-push): ignore release doc updates commits and tags
+* 2b09de6 docs: publishing instructions
+* d33dd82 devex(pre-push): fetch all remote tags
+* 42ca6ae devex: add script to set up repo
+* 4845437 devex(pre-push): ensure release docs are ready
+* 58a6c51 devex(pre-commit): build extension
+* 43326bd deps: install `husky`
+* 415f46c devex(ci): move CI from CircleCI to GitHub Actions
+* 192ecb6 devex: add NPM script to validate VSCode Marketplace credentials
 
 ### 1.0.0
 
