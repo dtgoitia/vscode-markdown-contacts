@@ -80,6 +80,8 @@ changes_in_git="$( \
         --ancestry-path "${second_last_tag}..${last_tag}" \
         --pretty=oneline \
         --abbrev-commit \
+    | grep -v "docs: update release notes" \
+    | grep -v "${last_version}" \
     | sed 's/^/* /' \
 )"
 
