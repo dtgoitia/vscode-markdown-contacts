@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# Install dependencies
+npm ci
+
+# Install pre-commit hooks
+npm run setup:precommit

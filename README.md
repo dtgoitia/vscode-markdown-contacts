@@ -3,7 +3,7 @@
 * Install project dependencies:
 
   ```bash
-  npm install  # do not use `npm ci`
+  bin/set_up_development_environment
   ```
 
 * Debug the extension in VSCode:
