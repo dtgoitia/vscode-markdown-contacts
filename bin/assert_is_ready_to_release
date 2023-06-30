@@ -4,7 +4,7 @@
 
 set -eu
 
-README_PATH="README.md"
+CHANGELOG_PATH="CHANGELOG.md"
 
 log () {
     echo >&2 "${1}"
@@ -14,92 +14,26 @@ debug () {
     echo >&2 "DEBUG: ${1}"
 }
 
-get_nth_tag () {
-    # 0=last, 1=second last, etc.
-    position="${1}"
 
-    tag="$( \
-        git tag --list --sort="refname" \
-        | tail -n "$(( "${position}" + 1 ))" \
-        | head -n 1 \
-    )"
-
-    echo "${tag}"
+read_changelog () {
+    cat "${CHANGELOG_PATH}"
 }
 
-get_version_from_tag () {
-    tag="${1}"
-    version="$( echo -n "${tag}" | sed 's/v//'  )"
-    echo "${version}"
+assert_equal () {
+    text_a="${1}"
+    text_b="${2}"
+
+    diff \
+        --color \
+        --unified=5 \
+        <(echo "${text_a}") \
+        <(echo "${text_b}")
 }
 
-#
-# Find last and second last versions
-#
-last_tag="$( get_nth_tag 0 )"
-if [[ -z "${last_tag}" ]]; then
-    log "ERROR: could not find any tags"
-    exit 1
-fi
+before="$( read_changelog )"
 
-second_last_tag="$( get_nth_tag 1 )"
-if [[ -z "${second_last_tag}" ]]; then
-    log "ERROR: could not find the second last tag"
-    exit 1
-fi
+prepare_release --update-changelog
 
-last_version="$( get_version_from_tag "${last_tag}" )"
-second_last_version="$( get_version_from_tag "${second_last_tag}" )"
+after="$( read_changelog )"
 
-
-#
-# Assert that there is a section in the README for the last version
-#
-last_release_header_line_number="$( cat "${README_PATH}" | sed "/### ${last_version}/!d;=;Q" )"
-if [[ -z "${last_release_header_line_number}" ]]; then
-    echo "NOT READY: README.md must have a section with last version: ${last_version}"
-    exit 1
-fi
-
-
-#
-# Assert that there is a section in the README for the second last version
-#
-second_last_release_header_line_number="$( cat "${README_PATH}" | sed "/### ${second_last_version}/!d;=;Q" )"
-if [[ -z "${second_last_release_header_line_number}" ]]; then
-    echo "NOT READY: README.md must have a section with last version: ${second_last_version}"
-    exit 1
-fi
-
-
-#
-# Find changes in git
-#
-changes_in_git="$( \
-    git rev-list \
-        --ancestry-path "${second_last_tag}..${last_tag}" \
-        --pretty=oneline \
-        --abbrev-commit \
-    | grep -v "docs: update release notes" \
-    | grep -v "${last_version}" \
-    | sed 's/^/* /' \
-)"
-
-
-#
-# See if README.md has all changes in the last version section
-#
-changes_start_line_number="$(("${last_release_header_line_number}" + 2))"
-changes_end_line_number="$(("${second_last_release_header_line_number}" - 1 ))"
-
-changes_in_readme="$( \
-    cat "${README_PATH}" \
-    | sed -n "${changes_start_line_number},${changes_end_line_number}p"
-)"
-
-# Will fail if there is a difference
-diff \
-    --color \
-    --unified=5 \
-    <(echo "${changes_in_readme}") \
-    <(echo "${changes_in_git}")
+assert_equal "${before}" "${after}"
