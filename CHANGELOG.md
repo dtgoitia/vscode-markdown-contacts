@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.1.1 (2023-06-30)
+
+* `6f11f18` chore: add a license
+* `f90b930` devex: add logs to pre-push checks
+* `0e943e1` devex: always check if repo is ready to release before pushing from master
+* `db560f0` devex: compile extension only if TypeScript files change
+* `51836eb` devex: update script to check if commit is ready to be released
+* `0cf9ac3` docs: regenerate CHANGELOG file
+* `58e441d` docs: remove release notes from README
+
 ## 1.1.0 (2023-06-29)
 
 * `f60b1e5` docs: update release notes
