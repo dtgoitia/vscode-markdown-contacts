@@ -60,6 +60,7 @@
     "test": "node ./out/test/runTest.js",
     "publish:test-credentials": "vsce verify-pat",
     "publish": "vsce publish",
+    "publish:ci": "vsce publish --skip-duplicate",
     "setup:precommit": "husky install"
   },
   "devDependencies": {

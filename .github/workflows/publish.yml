@@ -46,7 +46,7 @@ jobs:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
 
       - name: Publish to VSCode Marketplace
-        run: npm run publish
+        run: npm run publish:ci
         env:
           VSCODE_PUBLISHER_ID: ${{ secrets.VSCODE_PUBLISHER_ID }}
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
