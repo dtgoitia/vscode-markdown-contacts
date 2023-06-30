@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.2 (2023-06-30)
+
+* `d5be0a6` deps(devex): update `vsce` to `@vscode/vsce`
+* `b97db5f` deps(ci): upgrade GitHub actions
+* `60d40a6` fix(ci): do not fail if release already published
+
 ## 1.1.1 (2023-06-30)
 
 * `6f11f18` chore: add a license
