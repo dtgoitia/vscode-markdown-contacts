@@ -4,8 +4,12 @@
 
 current_branch="$( bin/get_current_branch )"
 if [[ "${current_branch}" != "master" ]]; then
-    echo "Current branch is not master, skipping pre-push hook"
+    echo "Current branch is not master, skipping pre-push checks"
     exit 0  # nothing to do here
+else
+    echo "Running pre-push checks"
 fi
 
 bin/assert_is_ready_to_release
+
+echo "Pre-push checks completed"
