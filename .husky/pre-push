@@ -8,17 +8,4 @@ if [[ "${current_branch}" != "master" ]]; then
     exit 0  # nothing to do here
 fi
 
-is_new_release="$( bin/current_commit_is_new_release )"
-if [[ "yes" == "${is_new_release}" ]]; then
-    # carry on
-    echo "New release found"
-elif [[ "no" == "${is_new_release}" ]]; then
-    echo "This is not a new release, skipping pre-push hook"
-    exit 0  # nothing to do here
-else
-    echo "Unsupported value is_new_release='${is_new_release}'"
-    exit 1  # ERROR
-fi
-
-
 bin/assert_is_ready_to_release
