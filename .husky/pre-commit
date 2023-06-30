@@ -1,4 +1,13 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 . "$(dirname -- "$0")/_/husky.sh"
 
-npm run compile
+set -eu
+
+bin/assert_is_ready_to_release
+
+if [[ ! -z "$( bin/get_changed_files | grep '.*\.ts$' )" ]]; then
+    echo "Changed TypeScript files found"
+    npm run compile
+else
+    echo "No changed TypeScript files found"
+fi
