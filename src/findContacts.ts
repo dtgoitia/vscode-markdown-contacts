@@ -8,7 +8,7 @@ import log from './logs';
 
 export function updateContactsAsPerTextDocument({ document, contactManager, config }: { document: vscode.TextDocument, contactManager: ContactManager, config: Configuration }): void {
   if (document.isClosed) {
-    log.debug(`Won't scan anything, the document is closed`)
+    log.warning(`Won't scan contacts, as the document is closed`)
     return;
   }
 
@@ -18,7 +18,6 @@ export function updateContactsAsPerTextDocument({ document, contactManager, conf
   profiler.end();
   log.debug(`Document contacts scanned in`, profiler.delta(), `ms`);
 
-  log.info(`contacts:`, contacts);
   contactManager.batchAdd(contacts);
 }
 
@@ -40,7 +39,7 @@ function findContactsInText(text: string, symbol: ContactSymbol): Set<Contact> {
     rawContacts.add(contact);
   }
 
-  log.debug(rawContacts)
+  log.info(`Found ${rawContacts.size} contacts`);
 
   return rawContacts;
 }
