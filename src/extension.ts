@@ -74,6 +74,14 @@ export function activate(context: vscode.ExtensionContext) {
 			}
 		);
 		log.debug('TextDocument listener registration completed')
+
+		log.debug('Scanning active TextEditor started')
+		const activeTextEditor = vscode.window.activeTextEditor;
+		if (activeTextEditor) {
+			updateContactsAsPerTextDocument({ document: activeTextEditor.document, contactManager, config });
+		}
+		log.debug('Scanning active TextEditor completed')
+
 	} catch (error) {
 		log.error(error);
 		vscode.window.showErrorMessage(
