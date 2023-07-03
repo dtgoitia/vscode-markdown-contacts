@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.3 (2023-07-03)
+
+* `2d95346` fix: scan active TextEditor on start
+* `6375085` perf: exit early if document is zero-length
+* `15f4ba7` fix: improve logging
+
 ## 1.1.2 (2023-06-30)
 
 * `d5be0a6` deps(devex): update `vsce` to `@vscode/vsce`
