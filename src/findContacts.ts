@@ -14,7 +14,12 @@ export function updateContactsAsPerTextDocument({ document, contactManager, conf
 
   const profiler = new Profiler();
   profiler.start();
-  const contacts = findContactsInText(document.getText(), config.symbol);
+  const text = document.getText();
+  if (text.length === 0) {
+    log.warning(`Won't scan contacts, as the document text length is zero`)
+    return;
+  }
+  const contacts = findContactsInText(text, config.symbol);
   profiler.end();
   log.debug(`Document contacts scanned in`, profiler.delta(), `ms`);
 
